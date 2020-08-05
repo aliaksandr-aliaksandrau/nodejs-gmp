@@ -1,7 +1,6 @@
-
-const { pipeline } = require('stream');
-const fs = require('fs');
-const csv = require("csvtojson");
+import { pipeline } from 'stream';
+import { createReadStream, createWriteStream } from 'fs';
+import csv from 'csvtojson';
 
 const csvFilePath = './csv/nodejs-hw1-ex1.csv';
 const writeFilePath = './csv/nodejs-hw1-ex1.txt';
@@ -24,9 +23,9 @@ function transformBook(jsonObj: any): void {
 }
 
 pipeline(
-  fs.createReadStream(csvFilePath),
+  createReadStream(csvFilePath),
   csv().subscribe(transformBook),
-  fs.createWriteStream(writeFilePath),
+  createWriteStream(writeFilePath),
   (error: any) => {
     if (error) {
       console.error('Error: ', error)

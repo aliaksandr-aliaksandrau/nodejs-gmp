@@ -1,9 +1,9 @@
-const readline = require('readline');
+import { createInterface } from 'readline';
 
-const rl = readline.createInterface({
+const rl = createInterface({
   input: process.stdin
 });
 
 rl.on('line', (line: string) => {
-  console.log(line.split('').reverse().join(''));
+  console.log(`${line.split('').reverse().join('')}\n`);
 });

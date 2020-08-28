@@ -3,7 +3,7 @@ import * as express from 'express';
 
 //const express:  = require('express');
 const app: express.Express = express();
-const port: number = 3000;
+const port: number = 3500;
 
 const router: express.Router = express.Router();
 
@@ -38,11 +38,20 @@ app.listen(port, () => {
 });
 
 
-router.get('/user/:id', (req, res, next) => {
+router.param('id', (req, res, next, id) => {
+  req['user'] = users.find(el => el.id === id);
+  next();
+})
 
-  const id = req.params.id;
 
-  const user = users.find(el => el.id === id);
+router.get('/users/:id', (req, res, next: express.NextFunction) => {
+
+  // const id = req.params.id;
+
+  // const user = users.find(el => el.id === id);
+
+
+  const user = req['user'];
 
   res.json(user);
 
@@ -51,14 +60,36 @@ router.get('/user/:id', (req, res, next) => {
   next();
 });
 
-router.put('/user', (req, res, next) => {
-  const user = `user_`;
-  res.json(user);
+router.delete('/users/:id', (req, res, next) => {
 
-  res.send('USERS REQ')
+  const id = req.params.id;
+
+  const user = users.find(el => el.id === id);
+
+  if (!!user) {
+    user.isDeleated = true;
+
+    res.json(`User ${id} was deleted`);
+  } else {
+    res.status(404).json(`User ${id} was not found`);
+  }
 
   next();
 });
+
+router.post('/users', (req, res, next) => {
+  const user = `user_`;
+  res.json(user);
+
+  // res.send('USERS REQ')
+
+  next();
+});
+
+// router.use((req, res, next) => {
+//   console.log('REQUEST: ', req);
+//   next();
+// });
 
 
 

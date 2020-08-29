@@ -1,20 +1,12 @@
 
 import * as express from 'express';
 
-//const express:  = require('express');
-const app: express.Express = express();
+import { User } from './model/user';
+import { NextFunction, Router, Express } from 'express';
+
+const app: Express = express();
 const port: number = 3500;
-
-const router: express.Router = express.Router();
-
-
-type User = {
-  id: string;
-  login: string;
-  password: string;
-  age: number;
-  isDeleated: boolean;
-}
+const router: Router = Router();
 
 const users: User[] = [
   {
@@ -37,35 +29,24 @@ app.listen(port, () => {
   console.log(`App is running...`)
 });
 
+app.use(express.json());
 
-router.param('id', (req, res, next, id) => {
-  req['user'] = users.find(el => el.id === id);
+router.param('id', (req: any, res, next, id) => {
+  req.user = users.find(el => el.id === id);
+  console.log('PARAMS: users: ', req.user);
   next();
 })
 
-
-router.get('/users/:id', (req, res, next: express.NextFunction) => {
-
-  // const id = req.params.id;
-
-  // const user = users.find(el => el.id === id);
-
-
-  const user = req['user'];
-
+router.get('/users/:id', (req: any, res, next: NextFunction) => {
+  const user = req.user;
+  console.log('GET: users: ', users.length);
   res.json(user);
-
-  // res.send('Hello World!')
-
   next();
 });
 
 router.delete('/users/:id', (req, res, next) => {
-
   const id = req.params.id;
-
   const user = users.find(el => el.id === id);
-
   if (!!user) {
     user.isDeleated = true;
 
@@ -73,25 +54,25 @@ router.delete('/users/:id', (req, res, next) => {
   } else {
     res.status(404).json(`User ${id} was not found`);
   }
+  next();
+});
 
+
+router.put('/users/:id', (req, res, next) => {
+  const user = req.body.user as User;
+
+
+  res.json(`User ${user.id} was updated ${JSON.stringify(user)}`);
   next();
 });
 
 router.post('/users', (req, res, next) => {
-  const user = `user_`;
-  res.json(user);
-
-  // res.send('USERS REQ')
-
+  const user = req.body.user as User;
+  res.json(`User was created ${JSON.stringify(user)}`);
+  users.push(user);
+  console.log(users.length);
   next();
 });
-
-// router.use((req, res, next) => {
-//   console.log('REQUEST: ', req);
-//   next();
-// });
-
-
 
 app.use('/', router);
 

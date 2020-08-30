@@ -4,6 +4,7 @@ import mockUsers from './../mock-users.json';
 import { responseUserNotFoundHandler, getAutoSuggestUsers } from '../utility';
 import { User } from '../model/user';
 import { CustomRequest } from '../model/custom-request';
+import { ObjectSchema } from 'joi';
 
 const users: Map<string, User> = new Map();
 mockUsers.forEach((user: User) => users.set(user.id, user));
@@ -32,17 +33,50 @@ export const userRouteHandlers = {
         next();
     },
 
-    updateUser: (req: CustomRequest, res: Response, next: NextFunction) => {
-        const user = req.body.user as User;
+    updateUser: (schema: ObjectSchema) => {
+        return (req: CustomRequest, res: Response, next: NextFunction) => {
+            const user = req.body as User;
 
-        if (user && users.has(user.id)) {
-            users.set(user.id, user);
-            res.json(`User ${user.id} was updated to ${JSON.stringify(user)}`);
-        } else {
-            responseUserNotFoundHandler(res);
-        }
+            const { error } = schema.validate(user, {
+                abortEarly: false,
+                allowUnknown: false
+            });
 
-        next();
+            console.log('ERROR: ', error);
+
+
+            // if (!error?.isJoi) {
+            //     if (users.has(user.id)) {
+            //         users.set(user.id, user);
+            //         res.json(`User ${user.id} was updated to ${JSON.stringify(user)}`);
+            //     } else {
+            //         responseUserNotFoundHandler(res);
+            //     }
+            // } else {
+            //     res.status(400).json('TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT');
+            // }
+
+            if (error?.isJoi) {
+                res.status(400).json('TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT');
+            } else if (users.has(user.id)) {
+                users.set(user.id, user);
+                res.json(`User ${user.id} was updated to ${JSON.stringify(user)}`);
+            } else {
+                responseUserNotFoundHandler(res);
+            }
+            next();
+        };
+
+        // const user = req.body.user as User;
+
+        // if (user && users.has(user.id)) {
+        //     users.set(user.id, user);
+        //     res.json(`User ${user.id} was updated to ${JSON.stringify(user)}`);
+        // } else {
+        //     responseUserNotFoundHandler(res);
+        // }
+
+        // next();
     },
 
     createUser: (req: CustomRequest, res: Response, next: NextFunction) => {

@@ -1,10 +1,10 @@
 import { Response, NextFunction } from 'express';
+import { ObjectSchema } from 'joi';
 
 import mockUsers from './../mock-users.json';
 import { responseUserNotFoundHandler, getAutoSuggestUsers } from '../utility';
 import { User } from '../model/user';
 import { CustomRequest } from '../model/custom-request';
-import { ObjectSchema } from 'joi';
 
 const users: Map<string, User> = new Map();
 mockUsers.forEach((user: User) => users.set(user.id, user));
@@ -36,58 +36,39 @@ export const userRouteHandlers = {
     updateUser: (schema: ObjectSchema) => {
         return (req: CustomRequest, res: Response, next: NextFunction) => {
             const user = req.body as User;
+            const { error } = schema.validate(user);
 
-            const { error } = schema.validate(user, {
-                abortEarly: false,
-                allowUnknown: false
-            });
-
-            console.log('ERROR: ', error);
-
-
-            // if (!error?.isJoi) {
-            //     if (users.has(user.id)) {
-            //         users.set(user.id, user);
-            //         res.json(`User ${user.id} was updated to ${JSON.stringify(user)}`);
-            //     } else {
-            //         responseUserNotFoundHandler(res);
-            //     }
-            // } else {
-            //     res.status(400).json('TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT');
-            // }
-
-            if (error?.isJoi) {
-                res.status(400).json('TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT');
-            } else if (users.has(user.id)) {
-                users.set(user.id, user);
-                res.json(`User ${user.id} was updated to ${JSON.stringify(user)}`);
+            if (!error?.isJoi) {
+                if (users.has(user.id)) {
+                    users.set(user.id, user);
+                    res.json(`User ${user.id} was updated to ${JSON.stringify(user)}`);
+                } else {
+                    responseUserNotFoundHandler(res);
+                }
             } else {
-                responseUserNotFoundHandler(res);
+                res.status(400).json(error.message);
             }
             next();
         };
-
-        // const user = req.body.user as User;
-
-        // if (user && users.has(user.id)) {
-        //     users.set(user.id, user);
-        //     res.json(`User ${user.id} was updated to ${JSON.stringify(user)}`);
-        // } else {
-        //     responseUserNotFoundHandler(res);
-        // }
-
-        // next();
     },
 
-    createUser: (req: CustomRequest, res: Response, next: NextFunction) => {
-        const user = req.body.user as User;
+    createUser: (schema: ObjectSchema) => {
+        return (req: CustomRequest, res: Response, next: NextFunction) => {
+            const user = req.body as User;
+            const { error } = schema.validate(user);
 
-        if (user) {
-            users.set(user.id, user);
-            res.json(`User was created ${JSON.stringify(user)}`);
-        }
-
-        next();
+            if (!error?.isJoi) {
+                if (users.has(user.id)) {
+                    users.set(user.id, user);
+                    res.json(`User was created: ${JSON.stringify(user)}`);
+                } else {
+                    responseUserNotFoundHandler(res);
+                }
+            } else {
+                res.status(400).json(error.message);
+            }
+            next();
+        };
     },
 
     getSuggestedUsers: (req: CustomRequest, res: Response, next: NextFunction) => {

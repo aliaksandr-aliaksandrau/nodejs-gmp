@@ -9,6 +9,6 @@ export function createRouter(): Router {
         .get('/user/:id', userRouteHandlers.getUser)
         .delete('/user/:id', userRouteHandlers.deleteUser)
         .put('/user', userRouteHandlers.updateUser(userSchema))
-        .post('/user', userRouteHandlers.createUser)
+        .post('/user', userRouteHandlers.createUser(userSchema))
         .use('/suggested-users', userRouteHandlers.getSuggestedUsers);
 }

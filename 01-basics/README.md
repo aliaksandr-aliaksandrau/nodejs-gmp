@@ -1,4 +1,4 @@
-# nodejs-gmp
+# Homework 1 - Basics. Node.js fundamental theory
 
 ### Installation
 

@@ -57,6 +57,7 @@ export const userRouteHandlers = {
             if (!error?.isJoi) {
                 const id = uuidv4();
                 user.id = id;
+                user.isDeleated = false;
                 users.set(id, user);
                 res.json(`User was created: ${JSON.stringify(user)}`);
             } else {

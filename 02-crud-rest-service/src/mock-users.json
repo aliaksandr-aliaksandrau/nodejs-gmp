@@ -1,15 +1,15 @@
 [
   {
-    "id": "1",
+    "id": "02080ff8-0c90-4405-bcab-8f48bd25e061",
     "login": "user1",
-    "password": "pass_1",
+    "password": "pass1",
     "age": 20,
     "isDeleated": false
   },
   {
-    "id": "2",
+    "id": "4ad24ec0-402d-45e5-8951-d2a1356ca262",
     "login": "user2",
-    "password": "pass_2",
+    "password": "pass2",
     "age": 22,
     "isDeleated": false
   }

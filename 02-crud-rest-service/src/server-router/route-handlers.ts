@@ -1,5 +1,6 @@
 import { Response, NextFunction } from 'express';
 import { ObjectSchema } from 'joi';
+import { v4 as uuidv4 } from 'uuid';
 
 import mockUsers from './../mock-users.json';
 import { responseUserNotFoundHandler, getAutoSuggestUsers } from '../utility';
@@ -15,12 +16,11 @@ export const userRouteHandlers = {
         next();
     },
 
-    getUser: (req: CustomRequest, res: Response, next: NextFunction) => {
+    getUser: (req: CustomRequest, res: Response) => {
         const user = req.user;
         user ? res.json(user) : responseUserNotFoundHandler(res);
-        next();
     },
-    deleteUser: (req: CustomRequest, res: Response, next: NextFunction) => {
+    deleteUser: (req: CustomRequest, res: Response) => {
         const user = req.user;
 
         if (!!user) {
@@ -29,12 +29,10 @@ export const userRouteHandlers = {
         } else {
             responseUserNotFoundHandler(res);
         }
-
-        next();
     },
 
     updateUser: (schema: ObjectSchema) => {
-        return (req: CustomRequest, res: Response, next: NextFunction) => {
+        return (req: CustomRequest, res: Response) => {
             const user = req.body as User;
             const { error } = schema.validate(user);
 
@@ -48,31 +46,27 @@ export const userRouteHandlers = {
             } else {
                 res.status(400).json(error.message);
             }
-            next();
         };
     },
 
     createUser: (schema: ObjectSchema) => {
-        return (req: CustomRequest, res: Response, next: NextFunction) => {
+        return (req: CustomRequest, res: Response) => {
             const user = req.body as User;
             const { error } = schema.validate(user);
 
             if (!error?.isJoi) {
-                if (users.has(user.id)) {
-                    users.set(user.id, user);
-                    res.json(`User was created: ${JSON.stringify(user)}`);
-                } else {
-                    responseUserNotFoundHandler(res);
-                }
+                const id = uuidv4();
+                user.id = id;
+                users.set(id, user);
+                res.json(`User was created: ${JSON.stringify(user)}`);
             } else {
                 res.status(400).json(error.message);
             }
-            next();
         };
     },
 
-    getSuggestedUsers: (req: CustomRequest, res: Response, next: NextFunction) => {
-        const substr = req.query.loginSubstring?.toString();
+    getSuggestedUsers: (req: CustomRequest, res: Response) => {
+        const substr = req.query.login_substring?.toString();
         const limit = Number.parseInt(req.query.limit?.toString() as string, 10);
 
         if (substr && !isNaN(limit)) {
@@ -81,6 +75,5 @@ export const userRouteHandlers = {
         } else {
             res.status(400).json('Please enter correct parameters');
         }
-        next();
     }
 };

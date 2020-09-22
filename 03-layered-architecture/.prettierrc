@@ -6,7 +6,7 @@
   "semi": true,
   "bracketSpacing": true,
   "endOfLine": "auto",
-  "trailingComma": "es5",
+  "trailingComma": "none",
   "arrowParens": "always",
   "proseWrap": "preserve",
   "quoteProps": "preserve",

@@ -4,21 +4,39 @@ import { v4 as uuidv4 } from 'uuid';
 
 import mockUsers from './../mock-users.json';
 import { responseUserNotFoundHandler, getAutoSuggestUsers } from '../utility';
-import { User } from '../model/user';
+import { User } from '../types/user';
 import { CustomRequest } from '../model/custom-request';
+import { UserService } from '../services';
+import { nextTick } from 'process';
 
 const users: Map<string, User> = new Map();
 mockUsers.forEach((user: User) => users.set(user.id, user));
 
 export const userRouteHandlers = {
-    processId: (req: CustomRequest, res: Response, next: NextFunction, id: string) => {
+    processId: (
+        req: CustomRequest,
+        res: Response,
+        next: NextFunction,
+        id: string
+    ) => {
+        req.id = id;
         req.user = users.get(id);
         next();
     },
 
     getUser: (req: CustomRequest, res: Response) => {
-        const user = req.user;
-        user ? res.json(user) : responseUserNotFoundHandler(res);
+        const { id } = req.params;
+
+        UserService.getUserById(id)
+            .then((user) => {
+                console.log('AAA: userRouteHandlers: getUser: ', user);
+                res.json(user);
+            })
+            .catch((err) => {
+                res.status(400).json(err.message);
+            });
+
+        //  user ? res.json(userDto) : responseUserNotFoundHandler(res);
     },
     deleteUser: (req: CustomRequest, res: Response) => {
         const user = req.user;
@@ -39,7 +57,9 @@ export const userRouteHandlers = {
             if (!error?.isJoi) {
                 if (users.has(user.id)) {
                     users.set(user.id, user);
-                    res.json(`User ${user.id} was updated to ${JSON.stringify(user)}`);
+                    res.json(
+                        `User ${user.id} was updated to ${JSON.stringify(user)}`
+                    );
                 } else {
                     responseUserNotFoundHandler(res);
                 }
@@ -68,10 +88,17 @@ export const userRouteHandlers = {
 
     getSuggestedUsers: (req: CustomRequest, res: Response) => {
         const substr = req.query.login_substring?.toString();
-        const limit = Number.parseInt(req.query.limit?.toString() as string, 10);
+        const limit = Number.parseInt(
+            req.query.limit?.toString() as string,
+            10
+        );
 
         if (substr && !isNaN(limit)) {
-            const suggestedUsers = getAutoSuggestUsers([...users.values()], substr, limit);
+            const suggestedUsers = getAutoSuggestUsers(
+                [...users.values()],
+                substr,
+                limit
+            );
             res.json(`Suggested users ${JSON.stringify(suggestedUsers)}`);
         } else {
             res.status(400).json('Please enter correct parameters');

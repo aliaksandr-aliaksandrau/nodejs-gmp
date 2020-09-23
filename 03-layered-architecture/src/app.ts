@@ -2,15 +2,23 @@ import express from 'express';
 import { Express } from 'express';
 import { Sequelize, DataTypes, Model, Optional, ModelCtor } from 'sequelize';
 import { sequilize as sq } from './database/connections';
+import { createRouter } from './server-router/router';
+
+const app: Express = express();
+const port: number = 3500;
+
+app.listen(port, () => console.log('App is running...'));
+app.use(express.json());
+app.use('/', createRouter());
 
 const sequilize: Sequelize = sq;
 
-const app = express();
-app.set('port', process.env.PORT || 4000);
+// const app = express();
+// app.set('port', process.env.PORT || 4000);
 
-app.listen(4000, () => {
-    console.log('Server is running.. on Port 4000');
-});
+// app.listen(4000, () => {
+//     console.log('Server is running.. on Port 4000');
+// });
 
 sequilize
     .authenticate()
@@ -21,40 +29,10 @@ sequilize
         console.error('Unable to connect to the database:', err);
     });
 
-export const UserModel: ModelCtor<Model> = sequilize.define(
-    'users',
-    {
-        id: {
-            type: DataTypes.INTEGER,
-            primaryKey: true,
-            allowNull: false
-        },
-        username: {
-            type: DataTypes.STRING,
-            allowNull: false
-        },
-        password: {
-            type: DataTypes.STRING,
-            allowNull: false
-        },
-        age: {
-            type: DataTypes.INTEGER,
-            allowNull: false
-        },
-        deleated: {
-            type: DataTypes.BOOLEAN,
-            allowNull: false
-        }
-    },
-    {
-        timestamps: false
-    }
-);
-
-// UserModel.findAll({ limit: 10 }).then((d) => {
+// UserModel.findAll({ limit: 10 }).then((d: any) => {
 //     console.log('AAA: USers: ', d);
 // });
 
-UserModel.findByPk(1).then((d) => {
-    console.log('AAA: USers: ', d?.toJSON());
-});
+// UserModel.findByPk(1).then((d: any) => {
+//     console.log('AAA: USers: ', d?.toJSON());
+// });

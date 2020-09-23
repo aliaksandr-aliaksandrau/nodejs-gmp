@@ -1,4 +1,4 @@
-import { User } from './model/user';
+import { User } from './types/user';
 
 export function responseUserNotFoundHandler(res: any): void {
     res.status(404).json('User was not found');

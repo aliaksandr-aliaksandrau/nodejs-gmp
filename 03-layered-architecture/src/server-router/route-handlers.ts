@@ -10,7 +10,7 @@ import { UserService } from '../services';
 import { nextTick } from 'process';
 
 const users: Map<string, User> = new Map();
-mockUsers.forEach((user: User) => users.set(user.id, user));
+// mockUsers.forEach((user: User) => users.set(user.id, user));
 
 export const userRouteHandlers = {
     processId: (
@@ -24,29 +24,44 @@ export const userRouteHandlers = {
         next();
     },
 
-    getUser: (req: CustomRequest, res: Response) => {
-        const { id } = req.params;
-
-        UserService.getUserById(id)
-            .then((user) => {
-                console.log('AAA: userRouteHandlers: getUser: ', user);
-                res.json(user);
+    getAllUsers: (req: CustomRequest, res: Response) => {
+        UserService.getAllUsers()
+            .then((allUsers) => {
+                // console.log('AAA: userRouteHandlers: getAllUsers: ', allUsers);
+                allUsers
+                    ? res.json(allUsers)
+                    : responseUserNotFoundHandler(res);
             })
             .catch((err) => {
                 res.status(400).json(err.message);
             });
+    },
 
-        //  user ? res.json(userDto) : responseUserNotFoundHandler(res);
+    getUser: (req: CustomRequest, res: Response) => {
+        const { id } = req.params;
+
+        UserService.getUserById(+id)
+            .then((user) => {
+                //  console.log('AAA: userRouteHandlers: getUser: ', user);
+                user ? res.json(user) : responseUserNotFoundHandler(res);
+            })
+            .catch((err) => {
+                res.status(400).json(err.message);
+            });
     },
     deleteUser: (req: CustomRequest, res: Response) => {
-        const user = req.user;
+        //  const user = req.user;
 
-        if (!!user) {
-            user.isDeleated = true;
-            res.json(`User ${user.id} was deleted`);
-        } else {
-            responseUserNotFoundHandler(res);
-        }
+        const { id } = req.params;
+
+        UserService.deleteUser(+id)
+            .then((user) => {
+                //  console.log('AAA: userRouteHandlers: getUser: ', user);
+                user ? res.json(user) : responseUserNotFoundHandler(res);
+            })
+            .catch((err) => {
+                res.status(400).json(err.message);
+            });
     },
 
     updateUser: (schema: ObjectSchema) => {
@@ -75,13 +90,20 @@ export const userRouteHandlers = {
             const { error } = schema.validate(user);
 
             if (!error?.isJoi) {
-                const id = uuidv4();
-                user.id = id;
-                user.isDeleated = false;
-                users.set(id, user);
-                res.json(`User was created: ${JSON.stringify(user)}`);
+                // const id = uuidv4();
+                //  user.id = id;
+                user.deleated = false;
+                //   users.set(id, user);
+                console.log('AAA: create user: ', user);
+                UserService.createUser(user)
+                    .then((result) => {
+                        res.json(`User was created: ${JSON.stringify(result)}`);
+                    })
+                    .catch((err) => {
+                        res.status(400).json(err.message);
+                    });
             } else {
-                res.status(400).json(error.message);
+                res.status(400).json('Data is not valid');
             }
         };
     },

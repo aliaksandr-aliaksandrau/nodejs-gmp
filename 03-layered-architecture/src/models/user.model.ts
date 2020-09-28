@@ -10,7 +10,7 @@ export const UserModel: ModelCtor<Model> = sequilize.define(
             primaryKey: true,
             allowNull: false
         },
-        username: {
+        login: {
             type: DataTypes.STRING,
             allowNull: false
         },
@@ -20,10 +20,6 @@ export const UserModel: ModelCtor<Model> = sequilize.define(
         },
         age: {
             type: DataTypes.INTEGER,
-            allowNull: false
-        },
-        deleated: {
-            type: DataTypes.BOOLEAN,
             allowNull: false
         }
     },

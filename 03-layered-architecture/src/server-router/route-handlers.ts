@@ -7,7 +7,6 @@ import { responseUserNotFoundHandler, getAutoSuggestUsers } from '../utility';
 import { User } from '../types/user';
 import { CustomRequest } from '../model/custom-request';
 import { UserService } from '../services';
-import { nextTick } from 'process';
 
 const users: Map<string, User> = new Map();
 // mockUsers.forEach((user: User) => users.set(user.id, user));
@@ -40,7 +39,7 @@ export const userRouteHandlers = {
     getUser: (req: CustomRequest, res: Response) => {
         const { id } = req.params;
 
-        UserService.getUserById(+id)
+        UserService.getUserById(id)
             .then((user) => {
                 //  console.log('AAA: userRouteHandlers: getUser: ', user);
                 user ? res.json(user) : responseUserNotFoundHandler(res);
@@ -50,13 +49,10 @@ export const userRouteHandlers = {
             });
     },
     deleteUser: (req: CustomRequest, res: Response) => {
-        //  const user = req.user;
-
         const { id } = req.params;
 
-        UserService.deleteUser(+id)
+        UserService.deleteUser(id)
             .then((user) => {
-                //  console.log('AAA: userRouteHandlers: getUser: ', user);
                 user ? res.json(user) : responseUserNotFoundHandler(res);
             })
             .catch((err) => {
@@ -70,16 +66,16 @@ export const userRouteHandlers = {
             const { error } = schema.validate(user);
 
             if (!error?.isJoi) {
-                if (users.has(user.id)) {
-                    users.set(user.id, user);
-                    res.json(
-                        `User ${user.id} was updated to ${JSON.stringify(user)}`
-                    );
-                } else {
-                    responseUserNotFoundHandler(res);
-                }
+                console.log('AAA: update user: ', user);
+                UserService.updateUser(user)
+                    .then((result) => {
+                        res.json(`User was updated: ${JSON.stringify(result)}`);
+                    })
+                    .catch((err) => {
+                        res.status(400).json(err.message);
+                    });
             } else {
-                res.status(400).json(error.message);
+                res.status(400).json('Data is not valid');
             }
         };
     },
@@ -90,10 +86,8 @@ export const userRouteHandlers = {
             const { error } = schema.validate(user);
 
             if (!error?.isJoi) {
-                // const id = uuidv4();
-                //  user.id = id;
-                user.deleated = false;
-                //   users.set(id, user);
+                const id = uuidv4();
+                user.id = id;
                 console.log('AAA: create user: ', user);
                 UserService.createUser(user)
                     .then((result) => {

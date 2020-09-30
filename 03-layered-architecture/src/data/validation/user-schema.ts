@@ -1,7 +1,7 @@
 import Joi, { string, ObjectSchema } from 'joi';
 
 export const userSchema: ObjectSchema = Joi.object().keys({
-    id: Joi.number().optional(),
+    id: Joi.string().optional(),
     login: Joi.string()
         .regex(/^[a-zA-Z0-9]{3,30}$/)
         .required(),

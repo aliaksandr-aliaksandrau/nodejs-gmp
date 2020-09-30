@@ -8,7 +8,7 @@ export class UserService {
         return (users as unknown) as User[];
     }
 
-    static async getUserById(id: number): Promise<User> {
+    static async getUserById(id: string): Promise<User> {
         const user = await UserModel.findByPk(id);
         console.log('AAA: getUserById: ', user);
 
@@ -20,8 +20,16 @@ export class UserService {
         return (result as unknown) as User;
     }
 
-    static async deleteUser(id: number): Promise<any> {
+    static async deleteUser(id: string): Promise<any> {
         const result = await UserModel.destroy({
+            where: { id }
+        });
+        return (result as unknown) as User;
+    }
+
+    static async updateUser(user: User): Promise<any> {
+        const id = user.id;
+        const result = await UserModel.update(user, {
             where: { id }
         });
         return (result as unknown) as User;

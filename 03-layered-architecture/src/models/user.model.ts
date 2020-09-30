@@ -6,7 +6,7 @@ export const UserModel: ModelCtor<Model> = sequilize.define(
     'users',
     {
         id: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.STRING,
             primaryKey: true,
             allowNull: false
         },

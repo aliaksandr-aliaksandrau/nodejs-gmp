@@ -28,11 +28,3 @@ sequilize
     .catch((err) => {
         console.error('Unable to connect to the database:', err);
     });
-
-// UserModel.findAll({ limit: 10 }).then((d: any) => {
-//     console.log('AAA: USers: ', d);
-// });
-
-// UserModel.findByPk(1).then((d: any) => {
-//     console.log('AAA: USers: ', d?.toJSON());
-// });

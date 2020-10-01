@@ -210,13 +210,13 @@
 				"allowArrowFunctions": true
 			}
 		],
-		"indent": [
-			2,
-			4,
-			{
-				"SwitchCase": 1
-			}
-		],
+		// "indent": [
+		// 	2,
+		// 	4,
+		// 	{
+		// 		"SwitchCase": 1
+		// 	}
+		// ],
 		"linebreak-style": 0,
 		"max-len": [
 			2,

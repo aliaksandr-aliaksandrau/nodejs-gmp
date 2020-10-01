@@ -2,14 +2,10 @@ import { Response, NextFunction } from 'express';
 import { ObjectSchema } from 'joi';
 import { v4 as uuidv4 } from 'uuid';
 
-import mockUsers from './../mock-users.json';
 import { responseUserNotFoundHandler, getAutoSuggestUsers } from '../utility';
 import { User } from '../types/user';
 import { CustomRequest } from '../model/custom-request';
 import { UserService } from '../services';
-
-const users: Map<string, User> = new Map();
-// mockUsers.forEach((user: User) => users.set(user.id, user));
 
 export const userRouteHandlers = {
     processId: (
@@ -19,14 +15,12 @@ export const userRouteHandlers = {
         id: string
     ) => {
         req.id = id;
-        req.user = users.get(id);
         next();
     },
 
     getAllUsers: (req: CustomRequest, res: Response) => {
         UserService.getAllUsers()
             .then((allUsers) => {
-                // console.log('AAA: userRouteHandlers: getAllUsers: ', allUsers);
                 allUsers
                     ? res.json(allUsers)
                     : responseUserNotFoundHandler(res);
@@ -41,7 +35,6 @@ export const userRouteHandlers = {
 
         UserService.getUserById(id)
             .then((user) => {
-                //  console.log('AAA: userRouteHandlers: getUser: ', user);
                 user ? res.json(user) : responseUserNotFoundHandler(res);
             })
             .catch((err) => {
@@ -66,7 +59,6 @@ export const userRouteHandlers = {
             const { error } = schema.validate(user);
 
             if (!error?.isJoi) {
-                console.log('AAA: update user: ', user);
                 UserService.updateUser(user)
                     .then((result) => {
                         res.json(`User was updated: ${JSON.stringify(result)}`);
@@ -110,12 +102,25 @@ export const userRouteHandlers = {
         );
 
         if (substr && !isNaN(limit)) {
-            const suggestedUsers = getAutoSuggestUsers(
-                [...users.values()],
-                substr,
-                limit
-            );
-            res.json(`Suggested users ${JSON.stringify(suggestedUsers)}`);
+            UserService.getAllUsers()
+                .then((allUsers) => {
+                    const suggestedUsers = getAutoSuggestUsers(
+                        [...allUsers],
+                        substr,
+                        limit
+                    );
+
+                    allUsers
+                        ? res.json(
+                              `Suggested users ${JSON.stringify(
+                                  suggestedUsers
+                              )}`
+                          )
+                        : responseUserNotFoundHandler(res);
+                })
+                .catch((err) => {
+                    res.status(400).json(err.message);
+                });
         } else {
             res.status(400).json('Please enter correct parameters');
         }

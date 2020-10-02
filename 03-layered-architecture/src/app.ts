@@ -1,8 +1,7 @@
 import express from 'express';
 import { Express } from 'express';
-import { Sequelize, DataTypes, Model, Optional, ModelCtor } from 'sequelize';
-import { sequilize as sq } from './database/connections';
-import { createRouter } from './server-router/router';
+import { sequilize } from './database/connections';
+import { createRouter } from './api/router';
 
 const app: Express = express();
 const port: number = 3500;
@@ -10,15 +9,6 @@ const port: number = 3500;
 app.listen(port, () => console.log('App is running...'));
 app.use(express.json());
 app.use('/', createRouter());
-
-const sequilize: Sequelize = sq;
-
-// const app = express();
-// app.set('port', process.env.PORT || 4000);
-
-// app.listen(4000, () => {
-//     console.log('Server is running.. on Port 4000');
-// });
 
 sequilize
     .authenticate()

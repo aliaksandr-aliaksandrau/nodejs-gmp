@@ -1,5 +1,4 @@
-// import { DataTypes, Model, ModelCtor } from 'sequelize/types';
-import { Sequelize, DataTypes, Model, Optional, ModelCtor } from 'sequelize';
+import { DataTypes, Model, ModelCtor } from 'sequelize';
 import { sequilize } from '../database/connections';
 
 export const UserModel: ModelCtor<Model> = sequilize.define(

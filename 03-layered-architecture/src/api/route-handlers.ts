@@ -4,7 +4,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 import { responseUserNotFoundHandler, getAutoSuggestUsers } from '../utility';
 import { User } from '../types/user';
-import { CustomRequest } from '../model/custom-request';
+import { CustomRequest } from './model/custom-request';
 import { UserService } from '../services';
 
 export const userRouteHandlers = {
@@ -80,7 +80,6 @@ export const userRouteHandlers = {
             if (!error?.isJoi) {
                 const id = uuidv4();
                 user.id = id;
-                console.log('AAA: create user: ', user);
                 UserService.createUser(user)
                     .then((result) => {
                         res.json(`User was created: ${JSON.stringify(result)}`);

@@ -14,3 +14,34 @@ cd  01-basics
 cd  02-crud-rest-service
 
 ```
+
+## Homework 3 - PostgreSQL and layered architecture
+
+#### Run app
+```sh
+cd  03-layered-architecture
+
+npm install
+
+npm run start
+
+```
+#### API
+
+```sh
+
+  GET user/:id
+
+  GET users
+
+  POST user
+
+  PUT user
+
+  DELETE user/:id
+
+  GST suggested-users?login_substring=${substring}&limit=${limit}
+
+```
+
+

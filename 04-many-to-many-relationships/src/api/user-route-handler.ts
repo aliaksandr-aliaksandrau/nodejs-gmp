@@ -7,7 +7,7 @@ import { User } from '../types/user';
 import { CustomRequest } from './model/custom-request';
 import { UserService } from '../services';
 
-export const userRouteHandlers = {
+export const userRouteHandler = {
     processId: (
         req: CustomRequest,
         res: Response,

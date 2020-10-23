@@ -1,15 +1,21 @@
 import { Router } from 'express';
 
-import { userRouteHandlers } from './route-handlers';
+import { userRouteHandler } from './user-route-handler';
 import { userSchema } from '../data/validation/user-schema';
+import { groupService } from '../services/group-service';
 
 export function createRouter(): Router {
-    return Router()
-        .param('id', userRouteHandlers.processId)
-        .get('/user/:id', userRouteHandlers.getUser)
-        .get('/users', userRouteHandlers.getAllUsers)
-        .delete('/user/:id', userRouteHandlers.deleteUser)
-        .put('/user', userRouteHandlers.updateUser(userSchema))
-        .post('/user', userRouteHandlers.createUser(userSchema))
-        .use('/suggested-users', userRouteHandlers.getSuggestedUsers);
+    return (
+        Router()
+            .param('id', userRouteHandler.processId)
+            // user
+            .get('/user/:id', userRouteHandler.getUser)
+            .get('/users', userRouteHandler.getAllUsers)
+            .delete('/user/:id', userRouteHandler.deleteUser)
+            .put('/user', userRouteHandler.updateUser(userSchema))
+            .post('/user', userRouteHandler.createUser(userSchema))
+            .use('/suggested-users', userRouteHandler.getSuggestedUsers)
+            // group
+            .get('/groups', groupService.getAllGroups)
+    );
 }

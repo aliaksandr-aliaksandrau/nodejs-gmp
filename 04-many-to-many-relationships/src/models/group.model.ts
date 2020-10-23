@@ -13,7 +13,7 @@ export const GroupModel: ModelCtor<Model> = sequilize.define(
       type: DataTypes.STRING,
       allowNull: false
     },
-    permission: {
+    permissions: {
       type: DataTypes.ARRAY(DataTypes.STRING),
       allowNull: false
     }

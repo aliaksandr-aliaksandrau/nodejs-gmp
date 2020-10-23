@@ -4,9 +4,17 @@ export function responseUserNotFoundHandler(res: any): void {
     res.status(404).json('User was not found');
 }
 
-export function getAutoSuggestUsers(users: User[], loginSubstring: string, limit: number): User[] {
+export function responseGroupNotFoundHandler(res: any): void {
+    res.status(404).json('Group was not found');
+}
+
+export function getAutoSuggestUsers(
+    users: User[],
+    loginSubstring: string,
+    limit: number
+): User[] {
     const filteredUsers = users
-        .filter(user => user.login.includes(loginSubstring))
+        .filter((user) => user.login.includes(loginSubstring))
         .sort(sortByLogin)
         .slice(0, limit);
     return filteredUsers;

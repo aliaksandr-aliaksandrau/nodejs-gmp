@@ -1,7 +1,7 @@
 import { DataTypes, Model, ModelCtor } from 'sequelize';
-import { sequilize } from '../database/connections';
+import { sequelize } from '../database/connections';
 
-export const UserModel: ModelCtor<Model> = sequilize.define(
+export const UserModel: ModelCtor<Model> = sequelize.define(
     'users',
     {
         id: {

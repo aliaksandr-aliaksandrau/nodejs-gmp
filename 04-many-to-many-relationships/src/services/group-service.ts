@@ -83,7 +83,6 @@ export class GroupService {
         return (req: CustomRequest, res: Response) => {
             const group = req.body as Group;
             const { error } = schema.validate(group);
-            console.log(error);
             if (!error?.isJoi) {
                 const id = uuidv4();
                 group.id = id;
@@ -100,5 +99,20 @@ export class GroupService {
                 );
             }
         };
+    }
+
+    addUsersToGroup(req: CustomRequest, res: Response): any {
+        const { groupId, userIds } = req.body;
+
+        console.log('GroupService: addUsersToGroup: groupId: ', groupId);
+        console.log('GroupService: addUsersToGroup: userIds: ', userIds);
+
+        GroupDao.addUsersToGroup(groupId, userIds)
+            .then((group) => {
+                group ? res.json(group) : responseGroupNotFoundHandler(res);
+            })
+            .catch((err) => {
+                res.status(400).json(err.message);
+            });
     }
 }

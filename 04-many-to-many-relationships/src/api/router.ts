@@ -22,5 +22,6 @@ export function createRouter(): Router {
             .delete('/group/:id', groupService.deleteGroup)
             .put('/group', groupService.updateGroup(groupSchema) as any)
             .post('/group', groupService.createGroup(groupSchema) as any)
+            .post('/groups/add-user', groupService.addUsersToGroup)
     );
 }

@@ -1,4 +1,5 @@
-import { GroupModel } from '../models';
+import { sequelize } from '../database/connections';
+import { GroupModel, UserModel } from '../models';
 import { Group } from '../types';
 
 export class GroupDao {
@@ -31,5 +32,38 @@ export class GroupDao {
             returning: true
         });
         return (result as unknown) as Group;
+    }
+
+    static async addUsersToGroup(
+        groupId: string,
+        userIds: string[]
+    ): Promise<any> {
+        const t = await sequelize.transaction();
+
+        try {
+            const groups: any = await GroupModel.findByPk(groupId);
+
+            if (!groups) {
+                return null;
+            }
+
+            const users: any = await UserModel.findAll({
+                where: { id: userIds }
+            });
+
+            if (!users) {
+                return null;
+            }
+
+            await groups.addUsers(users, {
+                transaction: t
+            });
+            await t.commit();
+            sequelize.sync();
+        } catch (error) {
+            console.log(error);
+            await t.rollback();
+            return null;
+        }
     }
 }

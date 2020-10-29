@@ -58,10 +58,9 @@ export class GroupDao {
             await groups.addUsers(users, {
                 transaction: t
             });
-            await t.commit();
-            sequelize.sync();
+            return await t.commit();
         } catch (error) {
-            console.log(error);
+            console.error(error);
             await t.rollback();
             return null;
         }

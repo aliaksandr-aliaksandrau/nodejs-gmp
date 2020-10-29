@@ -108,8 +108,10 @@ export class GroupService {
         console.log('GroupService: addUsersToGroup: userIds: ', userIds);
 
         GroupDao.addUsersToGroup(groupId, userIds)
-            .then((group) => {
-                group ? res.json(group) : responseGroupNotFoundHandler(res);
+            .then((result) => {
+                result
+                    ? res.json('Users were added to group')
+                    : res.status(404).json('Users were not added to group');
             })
             .catch((err) => {
                 res.status(400).json(err.message);

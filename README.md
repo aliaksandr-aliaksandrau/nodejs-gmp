@@ -45,6 +45,19 @@ npm run start
   GET suggested-users?login_substring=${substring}&limit=${limit}
 
 ```
+## Homework 4 - Second entity and many-to-many relationships
+
+#### Run app
+```sh
+cd  04-many-to-many-relationships
+
+npm install
+
+npm run start
+
+```
+
+#### API
 
   ##### GROUPS
 
@@ -65,5 +78,3 @@ npm run start
   GET groups/users/:id  - Get users by group id
 
 ```
-
-

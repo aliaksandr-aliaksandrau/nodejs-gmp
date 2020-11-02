@@ -3,11 +3,9 @@ import { Router } from 'express';
 import { userRouteHandler } from './user-route-handler';
 import { userSchema, groupSchema } from '../data/validation';
 import { GroupService } from '../services/group-service';
-import { UserGroupService } from '../services';
 
 export function createRouter(): Router {
     const groupService = new GroupService();
-    const userGroupService = new UserGroupService();
 
     return (
         Router()
@@ -27,6 +25,6 @@ export function createRouter(): Router {
             .post('/group', groupService.createGroup(groupSchema) as any)
             // user groups
             .post('/groups/add-users', groupService.addUsersToGroup)
-            .get('/groups/users/:id', userGroupService.getUserIdsByGroupId)
+            .get('/groups/users/:id', groupService.getUsersByGroupId)
     );
 }

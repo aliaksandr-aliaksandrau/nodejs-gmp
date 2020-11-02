@@ -65,4 +65,18 @@ export class GroupDao {
             return null;
         }
     }
+
+    static async getUsersByGroupId(groupsId: string): Promise<any> {
+        const result: any = await GroupModel.findAll({
+            where: { id: groupsId },
+            include: [
+                {
+                    model: UserModel,
+                    as: 'users',
+                    attributes: ['id', 'login', 'age']
+                }
+            ]
+        });
+        return result;
+    }
 }

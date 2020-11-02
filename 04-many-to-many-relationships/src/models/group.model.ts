@@ -24,18 +24,18 @@ export const GroupModel: ModelCtor<Model> = sequelize.define(
     }
 );
 
-// GroupModel.belongsToMany(UserModel, {
-//     through: 'user_group',
-//     as: 'users',
-//     targetKey: 'id',
-//     foreignKey: 'group_id',
-//     timestamps: false
-// } as BelongsToManyOptions);
+GroupModel.belongsToMany(UserModel, {
+    through: 'user_group',
+    as: 'users',
+    targetKey: 'id',
+    foreignKey: 'group_id',
+    timestamps: false
+} as BelongsToManyOptions);
 
-// UserModel.belongsToMany(GroupModel, {
-//     through: 'user_group',
-//     as: 'groups',
-//     targetKey: 'id',
-//     foreignKey: 'user_id',
-//     timestamps: false
-// });
+UserModel.belongsToMany(GroupModel, {
+    through: 'user_group',
+    as: 'groups',
+    targetKey: 'id',
+    foreignKey: 'user_id',
+    timestamps: false
+});

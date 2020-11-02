@@ -117,4 +117,18 @@ export class GroupService {
                 res.status(400).json(err.message);
             });
     }
+
+    getUsersByGroupId(req: CustomRequest, res: Response): void {
+        const { id } = req.params;
+
+        GroupDao.getUsersByGroupId(id)
+            .then((data) => {
+                data
+                    ? res.json(data)
+                    : res.status(404).json('Users not found by group id');
+            })
+            .catch((err) => {
+                res.status(400).json(err.message);
+            });
+    }
 }

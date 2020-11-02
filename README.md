@@ -28,6 +28,8 @@ npm run start
 ```
 #### API
 
+  ##### USERS
+
 ```sh
 
   GET user/:id
@@ -40,7 +42,27 @@ npm run start
 
   DELETE user/:id
 
-  GST suggested-users?login_substring=${substring}&limit=${limit}
+  GET suggested-users?login_substring=${substring}&limit=${limit}
+
+```
+
+  ##### GROUPS
+
+```sh
+
+  GET groups/:id
+
+  GET groups
+
+  POST groups
+
+  PUT groups
+
+  DELETE groups/:id
+
+  POST groups/add-users - Add users to group
+
+  GET groups/users/:id  - Get users by group id
 
 ```
 

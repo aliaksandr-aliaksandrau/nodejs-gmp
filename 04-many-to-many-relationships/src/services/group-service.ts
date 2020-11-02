@@ -62,8 +62,6 @@ export class GroupService {
             if (!error?.isJoi) {
                 GroupDao.updateGroup(group)
                     .then((result) => {
-                        console.log('AAA: result', result);
-
                         res.json(
                             `Group was updated: ${JSON.stringify(result)}`
                         );
@@ -88,7 +86,7 @@ export class GroupService {
                 group.id = id;
                 GroupDao.createGroup(group)
                     .then((result) => {
-                        res.json(`Group was created: ${result}`);
+                        res.json(result);
                     })
                     .catch((err) => {
                         res.status(400).json(err.message);
@@ -103,9 +101,6 @@ export class GroupService {
 
     addUsersToGroup(req: CustomRequest, res: Response): any {
         const { groupId, userIds } = req.body;
-
-        console.log('GroupService: addUsersToGroup: groupId: ', groupId);
-        console.log('GroupService: addUsersToGroup: userIds: ', userIds);
 
         GroupDao.addUsersToGroup(groupId, userIds)
             .then((result) => {

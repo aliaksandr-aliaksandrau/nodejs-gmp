@@ -19,10 +19,10 @@ export function createRouter(): Router {
             .use('/suggested-users', userRouteHandler.getSuggestedUsers)
             // group
             .get('/groups', groupService.getAllGroups)
-            .get('/group/:id', groupService.getGroupById)
-            .delete('/group/:id', groupService.deleteGroup)
-            .put('/group', groupService.updateGroup(groupSchema) as any)
-            .post('/group', groupService.createGroup(groupSchema) as any)
+            .get('/groups/:id', groupService.getGroupById)
+            .delete('/groups/:id', groupService.deleteGroup)
+            .put('/groups', groupService.updateGroup(groupSchema) as any)
+            .post('/groups', groupService.createGroup(groupSchema) as any)
             // user groups
             .post('/groups/add-users', groupService.addUsersToGroup)
             .get('/groups/users/:id', groupService.getUsersByGroupId)

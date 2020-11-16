@@ -42,7 +42,6 @@ export class GroupDao {
 
         try {
             const groups: any = await GroupModel.findByPk(groupId);
-
             if (!groups) {
                 return null;
             }
@@ -51,7 +50,7 @@ export class GroupDao {
                 where: { id: userIds }
             });
 
-            if (!users) {
+            if (!users || (users && users.length === 0)) {
                 return null;
             }
 

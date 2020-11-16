@@ -32,17 +32,17 @@ npm run start
 
 ```sh
 
-  GET user/:id
+  GET users/:id
 
   GET users
 
-  POST user
+  POST users
 
-  PUT user
+  PUT users
 
-  DELETE user/:id
+  DELETE users/:id
 
-  GET suggested-users?login_substring=${substring}&limit=${limit}
+  GET users/suggested-users?login_substring=${substring}&limit=${limit}
 
 ```
 ## Homework 4 - Second entity and many-to-many relationships

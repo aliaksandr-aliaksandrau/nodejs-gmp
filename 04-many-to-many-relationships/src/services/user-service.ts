@@ -56,44 +56,28 @@ export class UserService {
             });
     }
 
-    updateUser(schema: ObjectSchema): Function {
-        return (req: CustomRequest, res: Response) => {
-            const user = req.body as User;
-            const { error } = schema.validate(user);
-
-            if (!error?.isJoi) {
-                UserDao.updateUser(user)
-                    .then((result) => {
-                        res.json(`User was updated: ${JSON.stringify(result)}`);
-                    })
-                    .catch((err) => {
-                        res.status(400).json(err.message);
-                    });
-            } else {
-                res.status(400).json('Data is not valid');
-            }
-        };
+    updateUser(req: CustomRequest, res: Response): void {
+        const user = req.body as User;
+        UserDao.updateUser(user)
+            .then((result) => {
+                res.json(`User was updated: ${JSON.stringify(result)}`);
+            })
+            .catch((err) => {
+                res.status(400).json(err.message);
+            });
     }
 
-    createUser(schema: ObjectSchema): Function {
-        return (req: CustomRequest, res: Response) => {
-            const user = req.body as User;
-            const { error } = schema.validate(user);
-
-            if (!error?.isJoi) {
-                const id = uuidv4();
-                user.id = id;
-                UserDao.createUser(user)
-                    .then((result) => {
-                        res.json(`User was created: ${JSON.stringify(result)}`);
-                    })
-                    .catch((err) => {
-                        res.status(400).json(err.message);
-                    });
-            } else {
-                res.status(400).json('Data is not valid');
-            }
-        };
+    createUser(req: CustomRequest, res: Response): void {
+        const user = req.body as User;
+        const id = uuidv4();
+        user.id = id;
+        UserDao.createUser(user)
+            .then((result) => {
+                res.json(`User was created: ${JSON.stringify(result)}`);
+            })
+            .catch((err) => {
+                res.status(400).json(err.message);
+            });
     }
 
     getSuggestedUsers(req: CustomRequest, res: Response): void {

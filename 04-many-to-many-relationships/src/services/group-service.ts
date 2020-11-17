@@ -54,49 +54,29 @@ export class GroupService {
             });
     }
 
-    updateGroup(schema: ObjectSchema): Function {
-        return (req: CustomRequest, res: Response) => {
-            const group = req.body as Group;
-            const { error } = schema.validate(group);
+    updateGroup(req: CustomRequest, res: Response): void {
+        const group = req.body as Group;
 
-            if (!error?.isJoi) {
-                GroupDao.updateGroup(group)
-                    .then((result) => {
-                        res.json(
-                            `Group was updated: ${JSON.stringify(result)}`
-                        );
-                    })
-                    .catch((err) => {
-                        res.status(400).json(err.message);
-                    });
-            } else {
-                res.status(400).json(
-                    `Data is not valid: ${error.details[0]?.message}`
-                );
-            }
-        };
+        GroupDao.updateGroup(group)
+            .then((result) => {
+                res.json(`Group was updated: ${JSON.stringify(result)}`);
+            })
+            .catch((err) => {
+                res.status(400).json(err.message);
+            });
     }
 
-    createGroup(schema: ObjectSchema): Function {
-        return (req: CustomRequest, res: Response) => {
-            const group = req.body as Group;
-            const { error } = schema.validate(group);
-            if (!error?.isJoi) {
-                const id = uuidv4();
-                group.id = id;
-                GroupDao.createGroup(group)
-                    .then((result) => {
-                        res.json(result);
-                    })
-                    .catch((err) => {
-                        res.status(400).json(err.message);
-                    });
-            } else {
-                res.status(400).json(
-                    `Data is not valid: ${error.details[0]?.message}`
-                );
-            }
-        };
+    createGroup(req: CustomRequest, res: Response): void {
+        const group = req.body as Group;
+        const id = uuidv4();
+        group.id = id;
+        GroupDao.createGroup(group)
+            .then((result) => {
+                res.json(result);
+            })
+            .catch((err) => {
+                res.status(400).json(err.message);
+            });
     }
 
     addUsersToGroup(req: CustomRequest, res: Response): any {

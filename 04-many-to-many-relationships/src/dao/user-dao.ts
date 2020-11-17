@@ -8,28 +8,27 @@ export class UserDao {
     }
 
     static async getUserById(id: string): Promise<User> {
-      const user = await UserModel.findByPk(id);
-      return (user as unknown) as User;
-  }
+        const user = await UserModel.findByPk(id);
+        return (user as unknown) as User;
+    }
 
-  static async createUser(user: User): Promise<User> {
-      const result = await UserModel.create(user);
-      return (result as unknown) as User;
-  }
+    static async createUser(user: User): Promise<User> {
+        const result = await UserModel.create(user);
+        return (result as unknown) as User;
+    }
 
-  static async deleteUser(id: string): Promise<any> {
-      const result = await UserModel.destroy({
-          where: { id }
-      });
-      return (result as unknown) as User;
-  }
+    static async deleteUser(id: string): Promise<number> {
+        const result = await UserModel.destroy({
+            where: { id }
+        });
+        return result;
+    }
 
-  static async updateUser(user: User): Promise<User> {
-      const id = user.id;
-      const result = await UserModel.update(user, {
-          where: { id },
-          returning: true
-      });
-      return (result as unknown) as User;
-  }
+    static async updateUser(id: string, user: User): Promise<User> {
+        const result = await UserModel.update(user, {
+            where: { id },
+            returning: true
+        });
+        return (result as unknown) as User;
+    }
 }

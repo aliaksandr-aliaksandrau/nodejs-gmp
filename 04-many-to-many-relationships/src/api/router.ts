@@ -15,14 +15,14 @@ export function createRouter(): Router {
             .get('/users/:id', userService.getUser)
             .get('/users', userService.getAllUsers)
             .delete('/users/:id', userService.deleteUser)
-            .put('/users', validate(userSchema), userService.updateUser)
+            .put('/users/:id', validate(userSchema), userService.updateUser)
             .post('/users', validate(userSchema), userService.createUser)
             .use('/users/suggested-users', userService.getSuggestedUsers)
             // group
             .get('/groups', groupService.getAllGroups)
             .get('/groups/:id', groupService.getGroupById)
             .delete('/groups/:id', groupService.deleteGroup)
-            .put('/groups', validate(groupSchema), groupService.updateGroup)
+            .put('/groups/:id', validate(groupSchema), groupService.updateGroup)
             .post('/groups', validate(groupSchema), groupService.createGroup)
             // user groups
             .post('/groups/add-users', groupService.addUsersToGroup)

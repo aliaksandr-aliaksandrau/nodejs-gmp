@@ -1,5 +1,4 @@
 import { Response, NextFunction } from 'express';
-import { ObjectSchema } from 'joi';
 import { v4 as uuidv4 } from 'uuid';
 
 import { CustomRequest } from '../api/model';
@@ -57,8 +56,10 @@ export class UserService {
     }
 
     updateUser(req: CustomRequest, res: Response): void {
+        const { id } = req.params;
         const user = req.body as User;
-        UserDao.updateUser(user)
+
+        UserDao.updateUser(id, user)
             .then((result) => {
                 res.json(`User was updated: ${JSON.stringify(result)}`);
             })

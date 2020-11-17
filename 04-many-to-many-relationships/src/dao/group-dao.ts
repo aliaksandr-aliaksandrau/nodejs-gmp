@@ -18,15 +18,14 @@ export class GroupDao {
         return (result as unknown) as Group;
     }
 
-    static async deleteGroup(id: string): Promise<any> {
+    static async deleteGroup(id: string): Promise<number> {
         const result = await GroupModel.destroy({
             where: { id }
         });
-        return (result as unknown) as Group;
+        return result;
     }
 
-    static async updateGroup(group: Group): Promise<Group> {
-        const id = group.id;
+    static async updateGroup(id: string, group: Group): Promise<any> {
         const result = await GroupModel.update(group, {
             where: { id },
             returning: true

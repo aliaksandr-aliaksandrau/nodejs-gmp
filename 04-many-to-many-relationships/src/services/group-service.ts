@@ -1,5 +1,4 @@
 import { Response, NextFunction } from 'express';
-import { ObjectSchema } from 'joi';
 import { v4 as uuidv4 } from 'uuid';
 
 import { responseGroupNotFoundHandler } from '../utility';
@@ -55,9 +54,10 @@ export class GroupService {
     }
 
     updateGroup(req: CustomRequest, res: Response): void {
+        const { id } = req.params;
         const group = req.body as Group;
 
-        GroupDao.updateGroup(group)
+        GroupDao.updateGroup(id, group)
             .then((result) => {
                 res.json(`Group was updated: ${JSON.stringify(result)}`);
             })

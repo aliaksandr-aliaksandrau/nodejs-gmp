@@ -38,7 +38,7 @@ npm run start
 
   POST users
 
-  PUT users
+  PUT users/:id
 
   DELETE users/:id
 
@@ -69,7 +69,7 @@ npm run start
 
   POST groups
 
-  PUT groups
+  PUT groups/:id
 
   DELETE groups/:id
 

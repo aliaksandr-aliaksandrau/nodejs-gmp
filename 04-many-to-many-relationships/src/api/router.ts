@@ -9,6 +9,7 @@ import {
 } from '../data/validation';
 import { GroupService } from '../services/group-service';
 import { UserService } from '../services';
+import { httpInfoLogger } from '../logger';
 
 export function createRouter(): Router {
     const groupService = new GroupService();
@@ -16,6 +17,7 @@ export function createRouter(): Router {
 
     return (
         Router()
+            .use(httpInfoLogger)
             .param('id', userService.processId)
             // user
             .get('/users/:id', userService.getUser)

@@ -11,6 +11,7 @@ import {
 } from '../data/validation';
 import { httpInfoLogger } from '../logger';
 import { GroupController, UserController } from '../controllers';
+import { expressErrorLoggerMiddleware } from '../middleware';
 
 export function createRouter(): Router {
     const groupController = new GroupController();
@@ -56,5 +57,6 @@ export function createRouter(): Router {
             // user groups
             .post('/groups/add-users', groupController.addUsersToGroup)
             .get('/groups/users/:id', groupController.getUsersByGroupId)
+            .use(expressErrorLoggerMiddleware)
     );
 }

@@ -2,14 +2,13 @@ import { NextFunction } from 'express';
 import { CustomRequest } from '../api/model';
 import { logger } from './logger';
 
-function modifyLogMessage(body: Object): Object {
+export function hidePassword(body: Object): Object {
     const result = { ...body } as any;
     if (result && result.password) {
         result.password = '******';
     }
     return result;
 }
-
 export const httpInfoLogger: any = (
     req: CustomRequest,
     res: Response,
@@ -17,7 +16,7 @@ export const httpInfoLogger: any = (
 ): void => {
     logger.info(
         `${req.method} ${req.url}, body: ${JSON.stringify(
-            modifyLogMessage(req.body)
+            hidePassword(req.body)
         )}`
     );
     next();

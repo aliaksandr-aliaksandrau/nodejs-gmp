@@ -1,11 +1,13 @@
 import { Router } from 'express';
 
 import {
-    validate,
+    validateBody,
     userUpdateSchema,
     userCreateSchema,
     groupUpdateSchema,
-    groupCreateSchema
+    groupCreateSchema,
+    getSuggestedSchema,
+    validateQuery
 } from '../data/validation';
 import { httpInfoLogger } from '../logger';
 import { GroupController, UserController } from '../controllers';
@@ -24,27 +26,31 @@ export function createRouter(): Router {
             .delete('/users/:id', userController.deleteUser)
             .put(
                 '/users/:id',
-                validate(userUpdateSchema),
+                validateBody(userUpdateSchema),
                 userController.updateUser
             )
             .post(
                 '/users',
-                validate(userCreateSchema),
+                validateBody(userCreateSchema),
                 userController.createUser
             )
-            .use('/users/suggested-users', userController.getSuggestedUsers)
+            .get(
+                '/user/suggested-users',
+                validateQuery(getSuggestedSchema),
+                userController.getSuggestedUsers
+            )
             // group
             .get('/groups', groupController.getAllGroups)
             .get('/groups/:id', groupController.getGroupById)
             .delete('/groups/:id', groupController.deleteGroup)
             .put(
                 '/groups/:id',
-                validate(groupUpdateSchema),
+                validateBody(groupUpdateSchema),
                 groupController.updateGroup
             )
             .post(
                 '/groups',
-                validate(groupCreateSchema),
+                validateBody(groupCreateSchema),
                 groupController.createGroup
             )
             // user groups

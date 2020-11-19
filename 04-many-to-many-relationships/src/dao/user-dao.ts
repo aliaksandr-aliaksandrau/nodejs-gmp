@@ -1,3 +1,4 @@
+import { logger } from '../logger';
 import { UserModel } from '../models';
 import { User } from '../types';
 

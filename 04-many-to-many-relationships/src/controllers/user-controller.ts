@@ -1,9 +1,16 @@
 import { Response, NextFunction } from 'express';
 
 import { CustomRequest } from '../api/model';
+import { controllerErrorLogger, logger } from '../logger';
 import { UserService } from '../services';
 import { User } from '../types';
 import { getAutoSuggestUsers, responseUserNotFoundHandler } from '../utility';
+
+const userControllerErrorLogger = (
+    method: string,
+    args: any[],
+    error: string
+) => controllerErrorLogger('UserController', method, args, error);
 
 export class UserController {
     constructor() {}
@@ -26,6 +33,7 @@ export class UserController {
                     : responseUserNotFoundHandler(res);
             })
             .catch((err) => {
+                userControllerErrorLogger('getAllUsers', [], err);
                 res.status(400).json(err.message);
             });
     }
@@ -38,6 +46,7 @@ export class UserController {
                 user ? res.json(user) : responseUserNotFoundHandler(res);
             })
             .catch((err) => {
+                userControllerErrorLogger('getUser', [id], err);
                 res.status(400).json(err.message);
             });
     }
@@ -50,6 +59,7 @@ export class UserController {
                 user ? res.json(user) : responseUserNotFoundHandler(res);
             })
             .catch((err) => {
+                userControllerErrorLogger('deleteUser', [id], err);
                 res.status(400).json(err.message);
             });
     }
@@ -63,6 +73,7 @@ export class UserController {
                 res.json(`User was updated: ${JSON.stringify(result)}`);
             })
             .catch((err) => {
+                userControllerErrorLogger('updateUser', [id, user], err);
                 res.status(400).json(err.message);
             });
     }
@@ -75,6 +86,7 @@ export class UserController {
                 res.json(`User was created: ${JSON.stringify(result)}`);
             })
             .catch((err) => {
+                userControllerErrorLogger('createUser', [user], err);
                 res.status(400).json(err.message);
             });
     }
@@ -86,30 +98,25 @@ export class UserController {
             10
         );
 
-        if (substr && !isNaN(limit)) {
-            UserService.getSuggestedUsers()
-                .then((allUsers) => {
-                    const suggestedUsers = getAutoSuggestUsers(
-                        [...allUsers],
-                        substr,
-                        limit
-                    );
+        UserService.getSuggestedUsers()
+            .then((allUsers) => {
+                const suggestedUsers = getAutoSuggestUsers(
+                    [...allUsers],
+                    substr,
+                    limit
+                );
 
-                    console.log('AAA: suggestedUsers: ', suggestedUsers);
-
-                    allUsers
-                        ? res.json(
-                              `Suggested users ${JSON.stringify(
-                                  suggestedUsers
-                              )}`
-                          )
-                        : responseUserNotFoundHandler(res);
-                })
-                .catch((err) => {
-                    res.status(400).json(err.message);
-                });
-        } else {
-            res.status(400).json('Please enter correct parameters');
-        }
+                allUsers
+                    ? res.json(suggestedUsers)
+                    : responseUserNotFoundHandler(res);
+            })
+            .catch((err) => {
+                userControllerErrorLogger(
+                    'getSuggestedUsers',
+                    [substr, limit],
+                    err
+                );
+                res.status(400).json(err.message);
+            });
     }
 }

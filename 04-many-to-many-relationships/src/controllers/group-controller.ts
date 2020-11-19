@@ -6,6 +6,12 @@ import { Group } from '../types';
 import { GroupService } from '../services';
 import { controllerErrorLogger } from '../logger';
 
+const groupControllerErrorLogger = (
+    method: string,
+    args: any[],
+    error: string
+) => controllerErrorLogger('GroupController', method, args, error);
+
 export class GroupController {
     constructor() {}
 
@@ -24,6 +30,7 @@ export class GroupController {
                 groups ? res.json(groups) : responseGroupNotFoundHandler(res);
             })
             .catch((err) => {
+                groupControllerErrorLogger('getAllGroups', [], err);
                 res.status(400).json(err.message);
             });
     }
@@ -36,6 +43,7 @@ export class GroupController {
                 group ? res.json(group) : responseGroupNotFoundHandler(res);
             })
             .catch((err) => {
+                groupControllerErrorLogger('getGroupById', [], err);
                 res.status(400).json(err.message);
             });
     }
@@ -48,6 +56,7 @@ export class GroupController {
                 group ? res.json(group) : responseGroupNotFoundHandler(res);
             })
             .catch((err) => {
+                groupControllerErrorLogger('deleteGroup', [], err);
                 res.status(400).json(err.message);
             });
     }
@@ -61,6 +70,7 @@ export class GroupController {
                 res.json(`Group was updated: ${JSON.stringify(result)}`);
             })
             .catch((err) => {
+                groupControllerErrorLogger('updateGroup', [], err);
                 res.status(400).json(err.message);
             });
     }
@@ -73,6 +83,7 @@ export class GroupController {
                 res.json(result);
             })
             .catch((err) => {
+                groupControllerErrorLogger('createGroup', [], err);
                 res.status(400).json(err.message);
             });
     }
@@ -87,6 +98,7 @@ export class GroupController {
                     : res.status(404).json('Users were not added to group');
             })
             .catch((err) => {
+                groupControllerErrorLogger('addUsersToGroup', [], err);
                 res.status(400).json(err.message);
             });
     }
@@ -101,6 +113,7 @@ export class GroupController {
                     : res.status(404).json('Users not found by group id');
             })
             .catch((err) => {
+                groupControllerErrorLogger('getUsersByGroupId', [], err);
                 res.status(400).json(err.message);
             });
     }

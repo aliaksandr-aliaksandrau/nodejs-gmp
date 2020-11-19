@@ -1,109 +1,39 @@
-import { Response, NextFunction } from 'express';
 import { v4 as uuidv4 } from 'uuid';
 
-import { responseGroupNotFoundHandler } from '../utility';
 import { GroupDao } from '../dao';
-import { CustomRequest } from '../api/model';
 import { Group } from '../types';
 
 export class GroupService {
-    constructor() {}
-
-    processId(
-        req: CustomRequest,
-        res: Response,
-        next: NextFunction,
-        id: string
-    ): void {
-        req.id = id;
-        next();
+    static async getAllGroups(): Promise<Group[]> {
+        return GroupDao.getAllGroups();
     }
 
-    getAllGroups(req: CustomRequest, res: Response): void {
-        GroupDao.getAllGroups()
-            .then((groups) => {
-                groups ? res.json(groups) : responseGroupNotFoundHandler(res);
-            })
-            .catch((err) => {
-                res.status(400).json(err.message);
-            });
+    static async getGroupById(id: string): Promise<Group> {
+        return GroupDao.getGroupById(id);
     }
 
-    getGroupById(req: CustomRequest, res: Response): void {
-        const { id } = req.params;
-
-        GroupDao.getGroupById(id)
-            .then((group) => {
-                group ? res.json(group) : responseGroupNotFoundHandler(res);
-            })
-            .catch((err) => {
-                res.status(400).json(err.message);
-            });
+    static async deleteGroup(id: string): Promise<number> {
+        return GroupDao.deleteGroup(id);
     }
 
-    deleteGroup(req: CustomRequest, res: Response): void {
-        const { id } = req.params;
-
-        GroupDao.deleteGroup(id)
-            .then((group) => {
-                group ? res.json(group) : responseGroupNotFoundHandler(res);
-            })
-            .catch((err) => {
-                res.status(400).json(err.message);
-            });
+    static async updateGroup(id: string, group: Group): Promise<Group> {
+        return GroupDao.updateGroup(id, group);
     }
 
-    updateGroup(req: CustomRequest, res: Response): void {
-        const { id } = req.params;
-        const group = req.body as Group;
-
-        GroupDao.updateGroup(id, group)
-            .then((result) => {
-                res.json(`Group was updated: ${JSON.stringify(result)}`);
-            })
-            .catch((err) => {
-                res.status(400).json(err.message);
-            });
-    }
-
-    createGroup(req: CustomRequest, res: Response): void {
-        const group = req.body as Group;
+    static async createGroup(group: Group): Promise<Group> {
         const id = uuidv4();
         group.id = id;
-        GroupDao.createGroup(group)
-            .then((result) => {
-                res.json(result);
-            })
-            .catch((err) => {
-                res.status(400).json(err.message);
-            });
+        return GroupDao.createGroup(group);
     }
 
-    addUsersToGroup(req: CustomRequest, res: Response): any {
-        const { groupId, userIds } = req.body;
-
-        GroupDao.addUsersToGroup(groupId, userIds)
-            .then((result) => {
-                result
-                    ? res.json('Users were added to group')
-                    : res.status(404).json('Users were not added to group');
-            })
-            .catch((err) => {
-                res.status(400).json(err.message);
-            });
+    static async addUsersToGroup(
+        groupId: string,
+        userIds: string[]
+    ): Promise<any> {
+        return GroupDao.addUsersToGroup(groupId, userIds);
     }
 
-    getUsersByGroupId(req: CustomRequest, res: Response): void {
-        const { id } = req.params;
-
-        GroupDao.getUsersByGroupId(id)
-            .then((data) => {
-                data
-                    ? res.json(data)
-                    : res.status(404).json('Users not found by group id');
-            })
-            .catch((err) => {
-                res.status(400).json(err.message);
-            });
+    static async getUsersByGroupId(groupsId: string): Promise<any> {
+        return GroupDao.getUsersByGroupId(groupsId);
     }
 }

@@ -22,3 +22,7 @@ export const httpInfoLogger: any = (
     );
     next();
 };
+
+export const controllerErrorLogger: any = (name: string, args: any) => {
+    logger.error(`method: ${name}, arguments: ${args}`);
+};

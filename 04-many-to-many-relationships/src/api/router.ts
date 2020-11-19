@@ -7,45 +7,48 @@ import {
     groupUpdateSchema,
     groupCreateSchema
 } from '../data/validation';
-import { GroupService } from '../services/group-service';
-import { UserService } from '../services';
 import { httpInfoLogger } from '../logger';
+import { GroupController, UserController } from '../controllers';
 
 export function createRouter(): Router {
-    const groupService = new GroupService();
-    const userService = new UserService();
+    const groupController = new GroupController();
+    const userController = new UserController();
 
     return (
         Router()
             .use(httpInfoLogger)
-            .param('id', userService.processId)
+            .param('id', userController.processId)
             // user
-            .get('/users/:id', userService.getUser)
-            .get('/users', userService.getAllUsers)
-            .delete('/users/:id', userService.deleteUser)
+            .get('/users/:id', userController.getUser)
+            .get('/users', userController.getAllUsers)
+            .delete('/users/:id', userController.deleteUser)
             .put(
                 '/users/:id',
                 validate(userUpdateSchema),
-                userService.updateUser
+                userController.updateUser
             )
-            .post('/users', validate(userCreateSchema), userService.createUser)
-            .use('/users/suggested-users', userService.getSuggestedUsers)
+            .post(
+                '/users',
+                validate(userCreateSchema),
+                userController.createUser
+            )
+            .use('/users/suggested-users', userController.getSuggestedUsers)
             // group
-            .get('/groups', groupService.getAllGroups)
-            .get('/groups/:id', groupService.getGroupById)
-            .delete('/groups/:id', groupService.deleteGroup)
+            .get('/groups', groupController.getAllGroups)
+            .get('/groups/:id', groupController.getGroupById)
+            .delete('/groups/:id', groupController.deleteGroup)
             .put(
                 '/groups/:id',
                 validate(groupUpdateSchema),
-                groupService.updateGroup
+                groupController.updateGroup
             )
             .post(
                 '/groups',
                 validate(groupCreateSchema),
-                groupService.createGroup
+                groupController.createGroup
             )
             // user groups
-            .post('/groups/add-users', groupService.addUsersToGroup)
-            .get('/groups/users/:id', groupService.getUsersByGroupId)
+            .post('/groups/add-users', groupController.addUsersToGroup)
+            .get('/groups/users/:id', groupController.getUsersByGroupId)
     );
 }

@@ -10,17 +10,24 @@ import {
     validateQuery
 } from '../data/validation';
 import { httpInfoLogger } from '../logger';
-import { GroupController, UserController } from '../controllers';
+import {
+    AuthenticationController,
+    GroupController,
+    UserController
+} from '../controllers';
 import { expressErrorLoggerMiddleware } from '../middleware';
 
 export function createRouter(): Router {
     const groupController = new GroupController();
     const userController = new UserController();
+    const authenticationController = new AuthenticationController();
 
     return (
         Router()
             .use(httpInfoLogger)
             .param('id', userController.processId)
+            // authentication
+            .post('./login', authenticationController.login)
             // user
             .get('/users/:id', userController.getUser)
             .get('/users', userController.getAllUsers)

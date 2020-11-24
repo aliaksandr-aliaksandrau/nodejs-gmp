@@ -1,35 +1,115 @@
-import { UserModel } from '../models';
+import { Response, NextFunction } from 'express';
+import { v4 as uuidv4 } from 'uuid';
+
+import { CustomRequest } from '../api/model';
+import { UserDao } from '../dao';
 import { User } from '../types';
+import { getAutoSuggestUsers, responseUserNotFoundHandler } from '../utility';
 
 export class UserService {
-    static async getAllUsers(): Promise<User[]> {
-        const users = await UserModel.findAll();
-        return (users as unknown) as User[];
+    constructor() {}
+
+    processId(
+        req: CustomRequest,
+        res: Response,
+        next: NextFunction,
+        id: string
+    ): void {
+        req.id = id;
+        next();
     }
 
-    static async getUserById(id: string): Promise<User> {
-        const user = await UserModel.findByPk(id);
-        return (user as unknown) as User;
+    getAllUsers(req: CustomRequest, res: Response): void {
+        UserDao.getAllUsers()
+            .then((allUsers) => {
+                allUsers
+                    ? res.json(allUsers)
+                    : responseUserNotFoundHandler(res);
+            })
+            .catch((err) => {
+                res.status(400).json(err.message);
+            });
     }
 
-    static async createUser(user: User): Promise<User> {
-        const result = await UserModel.create(user);
-        return (result as unknown) as User;
+    getUser(req: CustomRequest, res: Response): void {
+        const { id } = req.params;
+
+        UserDao.getUserById(id)
+            .then((user) => {
+                user ? res.json(user) : responseUserNotFoundHandler(res);
+            })
+            .catch((err) => {
+                res.status(400).json(err.message);
+            });
     }
 
-    static async deleteUser(id: string): Promise<any> {
-        const result = await UserModel.destroy({
-            where: { id }
-        });
-        return (result as unknown) as User;
+    deleteUser(req: CustomRequest, res: Response): void {
+        const { id } = req.params;
+
+        UserDao.deleteUser(id)
+            .then((user) => {
+                user ? res.json(user) : responseUserNotFoundHandler(res);
+            })
+            .catch((err) => {
+                res.status(400).json(err.message);
+            });
     }
 
-    static async updateUser(user: User): Promise<User> {
-        const id = user.id;
-        const result = await UserModel.update(user, {
-            where: { id },
-            returning: true
-        });
-        return (result as unknown) as User;
+    updateUser(req: CustomRequest, res: Response): void {
+        const { id } = req.params;
+        const user = req.body as User;
+
+        UserDao.updateUser(id, user)
+            .then((result) => {
+                res.json(`User was updated: ${JSON.stringify(result)}`);
+            })
+            .catch((err) => {
+                res.status(400).json(err.message);
+            });
+    }
+
+    createUser(req: CustomRequest, res: Response): void {
+        const user = req.body as User;
+        const id = uuidv4();
+        user.id = id;
+        UserDao.createUser(user)
+            .then((result) => {
+                res.json(`User was created: ${JSON.stringify(result)}`);
+            })
+            .catch((err) => {
+                res.status(400).json(err.message);
+            });
+    }
+
+    getSuggestedUsers(req: CustomRequest, res: Response): void {
+        const substr = req.query.login_substring?.toString();
+        const limit = Number.parseInt(
+            req.query.limit?.toString() as string,
+            10
+        );
+
+        if (substr && !isNaN(limit)) {
+            UserDao.getAllUsers()
+                .then((allUsers) => {
+                    const suggestedUsers = getAutoSuggestUsers(
+                        [...allUsers],
+                        substr,
+                        limit
+                    );
+
+                    allUsers
+                        ? res.json(
+                              `Suggested users ${JSON.stringify(
+                                  suggestedUsers
+                              )}`
+                          )
+                        : responseUserNotFoundHandler(res);
+                })
+                .catch((err) => {
+                    res.status(400).json(err.message);
+                });
+        } else {
+            res.status(400).json('Please enter correct parameters');
+        }
     }
 }

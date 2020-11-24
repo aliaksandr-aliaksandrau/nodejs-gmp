@@ -1,28 +1,47 @@
 import { Router } from 'express';
 
-import { userRouteHandler } from './user-route-handler';
-import { userSchema, groupSchema } from '../data/validation';
+import {
+    validate,
+    userUpdateSchema,
+    userCreateSchema,
+    groupUpdateSchema,
+    groupCreateSchema
+} from '../data/validation';
 import { GroupService } from '../services/group-service';
+import { UserService } from '../services';
 
 export function createRouter(): Router {
     const groupService = new GroupService();
+    const userService = new UserService();
 
     return (
         Router()
-            .param('id', userRouteHandler.processId)
+            .param('id', userService.processId)
             // user
-            .get('/user/:id', userRouteHandler.getUser)
-            .get('/users', userRouteHandler.getAllUsers)
-            .delete('/user/:id', userRouteHandler.deleteUser)
-            .put('/user', userRouteHandler.updateUser(userSchema))
-            .post('/user', userRouteHandler.createUser(userSchema))
-            .use('/suggested-users', userRouteHandler.getSuggestedUsers)
+            .get('/users/:id', userService.getUser)
+            .get('/users', userService.getAllUsers)
+            .delete('/users/:id', userService.deleteUser)
+            .put(
+                '/users/:id',
+                validate(userUpdateSchema),
+                userService.updateUser
+            )
+            .post('/users', validate(userCreateSchema), userService.createUser)
+            .use('/users/suggested-users', userService.getSuggestedUsers)
             // group
             .get('/groups', groupService.getAllGroups)
             .get('/groups/:id', groupService.getGroupById)
             .delete('/groups/:id', groupService.deleteGroup)
-            .put('/groups', groupService.updateGroup(groupSchema) as any)
-            .post('/groups', groupService.createGroup(groupSchema) as any)
+            .put(
+                '/groups/:id',
+                validate(groupUpdateSchema),
+                groupService.updateGroup
+            )
+            .post(
+                '/groups',
+                validate(groupCreateSchema),
+                groupService.createGroup
+            )
             // user groups
             .post('/groups/add-users', groupService.addUsersToGroup)
             .get('/groups/users/:id', groupService.getUsersByGroupId)

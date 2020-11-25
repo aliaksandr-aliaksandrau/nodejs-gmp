@@ -10,7 +10,7 @@ export function responseGroupNotFoundHandler(res: any): void {
 
 export function getAutoSuggestUsers(
     users: User[],
-    loginSubstring: string,
+    loginSubstring: string = '',
     limit: number
 ): User[] {
     const filteredUsers = users

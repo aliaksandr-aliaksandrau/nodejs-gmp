@@ -16,3 +16,8 @@ export const userCreateSchema: ObjectSchema = Joi.object().keys({
     password: string().regex(passwordRegExp).required(),
     age: getAgeSchema().required()
 });
+
+export const getSuggestedSchema: ObjectSchema = Joi.object().keys({
+    login_substring: Joi.string().regex(loginRegExp).required(),
+    limit: Joi.number().required()
+});

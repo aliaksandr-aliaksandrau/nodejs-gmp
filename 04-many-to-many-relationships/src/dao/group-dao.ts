@@ -25,7 +25,7 @@ export class GroupDao {
         return result;
     }
 
-    static async updateGroup(id: string, group: Group): Promise<any> {
+    static async updateGroup(id: string, group: Group): Promise<Group> {
         const result = await GroupModel.update(group, {
             where: { id },
             returning: true

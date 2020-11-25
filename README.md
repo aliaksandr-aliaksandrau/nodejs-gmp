@@ -1,34 +1,28 @@
 # NodeJS Global Mentoring Programm
 
-
-## Homework 1 - Basics. Node.js fundamental theory
+## Basics. Node.js fundamental theory
 
 ```sh
 cd  01-basics
 
 ```
 
-## Homework 2 - In-memory CRUD REST service with validation
-
-```sh
-cd  02-crud-rest-service
-
-```
-
-## Homework 3 - PostgreSQL and layered architecture
+## User Group Management
 
 #### Run app
+
 ```sh
-cd  03-layered-architecture
+cd  02-user-group-management
 
 npm install
 
 npm run start
 
 ```
+
 #### API
 
-  ##### USERS
+##### USERS
 
 ```sh
 
@@ -45,21 +39,8 @@ npm run start
   GET users/suggested-users?login_substring=${substring}&limit=${limit}
 
 ```
-## Homework 4 - Second entity and many-to-many relationships
 
-#### Run app
-```sh
-cd  04-many-to-many-relationships
-
-npm install
-
-npm run start
-
-```
-
-#### API
-
-  ##### GROUPS
+##### GROUPS
 
 ```sh
 

@@ -1,7 +1,7 @@
-import { Response, NextFunction } from 'express';
+import { Response } from 'express';
 
 import { CustomRequest } from '../api/model';
-import { controllerErrorLogger, logger } from '../logger';
+import { controllerErrorLogger } from '../logger';
 import { UserService } from '../services';
 import { User } from '../types';
 import { getAutoSuggestUsers, responseUserNotFoundHandler } from '../utility';
@@ -14,16 +14,6 @@ const userControllerErrorLogger = (
 
 export class UserController {
     constructor() {}
-
-    processId(
-        req: CustomRequest,
-        res: Response,
-        next: NextFunction,
-        id: string
-    ): void {
-        req.id = id;
-        next();
-    }
 
     getAllUsers(req: CustomRequest, res: Response): void {
         UserService.getAllUsers()

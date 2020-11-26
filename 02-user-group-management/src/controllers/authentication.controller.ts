@@ -17,7 +17,7 @@ export class AuthenticationController {
                 if (!accessToken) {
                     res.status(401).json('Please check username and password');
                 } else {
-                    res.json({ accessToken });
+                    res.status(201).send(accessToken);
                 }
             })
             .catch((err) => {

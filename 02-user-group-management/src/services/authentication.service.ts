@@ -1,33 +1,25 @@
 import jwt from 'jsonwebtoken';
+import { UserDao } from '../dao';
 
-import { User } from '../types';
-
-const secret: string = 'secret';
+const secret: string = process.env.PORT_NUMBER as string;
 
 export class AuthenticationService {
-    static async login(
-        username: string,
-        password: string
-    ): Promise<string | null> {
-        const mockUsername = 'test';
-        const mockPassword = 'test';
-
-        if (username === mockUsername && password === mockPassword) {
-            const user: Partial<User> = {
-                id: '1',
-                login: 'test',
-                age: 20
-            };
-
-            const token = jwt.sign(user, secret, {
-                expiresIn: '1m'
-            });
-            return token;
+    static async login(name: string, password: string) {
+        const user = await UserDao.getUserByNameAndPassword(name, password);
+        if (user) {
+            const token = jwt.sign(
+                {
+                    id: user.id,
+                    username: user.login,
+                    age: user.age
+                },
+                secret,
+                {
+                    expiresIn: '10m'
+                }
+            );
+            return { token };
         }
         return null;
-    }
-
-    static checkToken(token: string): boolean {
-        return true;
     }
 }

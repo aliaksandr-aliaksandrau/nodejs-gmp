@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 import { Response, Request, NextFunction } from 'express';
 
-const accessTokenSecret: string = 'secret';
+const secret: string = process.env.PORT_NUMBER as string;
 
 export const authenticationCheckMiddleware: any = (
     req: Request,
@@ -10,17 +10,13 @@ export const authenticationCheckMiddleware: any = (
 ): void => {
     const authHeader = req.headers.authorization;
 
-    console.log('AAA: authenticationCheck: ', authHeader);
-
     if (authHeader) {
-        const token = authHeader.split(' ')[1];
+        const token = authHeader.split(' ')[1] as string;
 
-        jwt.verify(token, accessTokenSecret, (err, user) => {
+        jwt.verify(token, secret, (err) => {
             if (err) {
                 return res.sendStatus(403);
             }
-
-            // req.user = user;
             next();
         });
     } else {

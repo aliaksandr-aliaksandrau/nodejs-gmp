@@ -9,7 +9,7 @@ cd  01-basics
 
 ## User Group Management
 
-#### Run app
+### SETUP
 
 ```sh
 cd  02-user-group-management
@@ -20,9 +20,24 @@ npm run start
 
 ```
 
-#### API
+### API
 
-##### USERS
+
+#### AUTHENTICATION
+
+```sh
+  POST login
+```
+  Request body:
+```sh
+{
+  "username": "someusername"
+  "password": "somepassword"
+}
+```
+
+
+#### USERS
 
 ```sh
 
@@ -40,7 +55,7 @@ npm run start
 
 ```
 
-##### GROUPS
+#### GROUPS
 
 ```sh
 

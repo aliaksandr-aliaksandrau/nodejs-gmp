@@ -1,12 +1,14 @@
 import { User } from './types/user';
 
-export function responseUserNotFoundHandler(res: any): void {
-    res.status(404).json('User was not found');
-}
+export const utility = {
+    responseGroupNotFoundHandler(res: any): void {
+        res.status(404).json('Group was not found');
+    },
 
-export function responseGroupNotFoundHandler(res: any): void {
-    res.status(404).json('Group was not found');
-}
+    responseUserNotFoundHandler(res: any): void {
+        res.status(404).json('User was not found');
+    }
+};
 
 export function getAutoSuggestUsers(
     users: User[],

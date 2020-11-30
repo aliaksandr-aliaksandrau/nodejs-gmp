@@ -1,4 +1,4 @@
-import Joi, { string, ObjectSchema } from 'joi';
+import Joi, { ObjectSchema } from 'joi';
 
 const nameRegExp: RegExp = /^[a-zA-Z0-9]{3,30}$/;
 const getPermissionsSchema = () =>

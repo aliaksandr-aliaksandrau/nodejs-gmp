@@ -12,6 +12,10 @@ export class UserService {
         return UserDao.getUserById(id);
     }
 
+    static async getUserByNameAndPassword(name: string, password: string) {
+        return UserDao.getUserByNameAndPassword(name, password);
+    }
+
     static async deleteUser(id: string): Promise<number> {
         return UserDao.deleteUser(id);
     }

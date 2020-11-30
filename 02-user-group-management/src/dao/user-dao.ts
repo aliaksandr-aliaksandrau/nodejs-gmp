@@ -13,6 +13,16 @@ export class UserDao {
         return (user as unknown) as User;
     }
 
+    static async getUserByNameAndPassword(
+        name: string,
+        password: string
+    ): Promise<User> {
+        const user = await UserModel.findOne({
+            where: { login: name, password }
+        });
+        return (user as unknown) as User;
+    }
+
     static async createUser(user: User): Promise<User> {
         const result = await UserModel.create(user);
         return (result as unknown) as User;

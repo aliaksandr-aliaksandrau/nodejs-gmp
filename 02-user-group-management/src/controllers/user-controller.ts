@@ -4,7 +4,7 @@ import { CustomRequest } from '../api/model';
 import { controllerErrorLogger } from '../logger';
 import { UserService } from '../services';
 import { User } from '../types';
-import { getAutoSuggestUsers, responseUserNotFoundHandler } from '../utility';
+import { getAutoSuggestUsers, utility } from '../utility';
 
 const userControllerErrorLogger = (
     method: string,
@@ -20,7 +20,7 @@ export class UserController {
             .then((allUsers) => {
                 allUsers
                     ? res.json(allUsers)
-                    : responseUserNotFoundHandler(res);
+                    : utility.responseUserNotFoundHandler(res);
             })
             .catch((err) => {
                 userControllerErrorLogger('getAllUsers', [], err);
@@ -33,7 +33,9 @@ export class UserController {
 
         UserService.getUserById(id)
             .then((user) => {
-                user ? res.json(user) : responseUserNotFoundHandler(res);
+                user
+                    ? res.json(user)
+                    : utility.responseUserNotFoundHandler(res);
             })
             .catch((err) => {
                 userControllerErrorLogger('getUser', [id], err);
@@ -46,7 +48,9 @@ export class UserController {
 
         UserService.deleteUser(id)
             .then((user) => {
-                user ? res.json(user) : responseUserNotFoundHandler(res);
+                user
+                    ? res.json(user)
+                    : utility.responseUserNotFoundHandler(res);
             })
             .catch((err) => {
                 userControllerErrorLogger('deleteUser', [id], err);
@@ -73,7 +77,7 @@ export class UserController {
 
         UserService.createUser(user)
             .then((result) => {
-                res.json(`User was created: ${JSON.stringify(result)}`);
+                res.json(result);
             })
             .catch((err) => {
                 userControllerErrorLogger('createUser', [user], err);
@@ -98,7 +102,7 @@ export class UserController {
 
                 allUsers
                     ? res.json(suggestedUsers)
-                    : responseUserNotFoundHandler(res);
+                    : utility.responseUserNotFoundHandler(res);
             })
             .catch((err) => {
                 userControllerErrorLogger(

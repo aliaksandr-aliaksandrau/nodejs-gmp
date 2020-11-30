@@ -1,33 +1,24 @@
 import { Response, NextFunction } from 'express';
 
-import { responseGroupNotFoundHandler } from '../utility';
+import { utility } from '../utility';
 import { CustomRequest } from '../api/model';
 import { Group } from '../types';
 import { GroupService } from '../services';
 import { controllerErrorLogger } from '../logger';
 
-const groupControllerErrorLogger = (
+export const groupControllerErrorLogger = (
     method: string,
     args: any[],
     error: string
 ) => controllerErrorLogger('GroupController', method, args, error);
 
 export class GroupController {
-    constructor() {}
-
-    processId(
-        req: CustomRequest,
-        res: Response,
-        next: NextFunction,
-        id: string
-    ): void {
-        req.id = id;
-        next();
-    }
     getAllGroups(req: CustomRequest, res: Response): void {
         GroupService.getAllGroups()
             .then((groups) => {
-                groups ? res.json(groups) : responseGroupNotFoundHandler(res);
+                groups
+                    ? res.json(groups)
+                    : utility.responseUserNotFoundHandler(res);
             })
             .catch((err) => {
                 groupControllerErrorLogger('getAllGroups', [], err);
@@ -40,7 +31,9 @@ export class GroupController {
 
         GroupService.getGroupById(id)
             .then((group) => {
-                group ? res.json(group) : responseGroupNotFoundHandler(res);
+                group
+                    ? res.json(group)
+                    : utility.responseUserNotFoundHandler(res);
             })
             .catch((err) => {
                 groupControllerErrorLogger('getGroupById', [], err);
@@ -53,7 +46,9 @@ export class GroupController {
 
         GroupService.deleteGroup(id)
             .then((group) => {
-                group ? res.json(group) : responseGroupNotFoundHandler(res);
+                group
+                    ? res.json(group)
+                    : utility.responseUserNotFoundHandler(res);
             })
             .catch((err) => {
                 groupControllerErrorLogger('deleteGroup', [], err);
